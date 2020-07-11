@@ -1,0 +1,74 @@
+<footer class="new-footer">
+    <ul>
+        <li>
+            <a href="/home/index.html">
+                <img {if condition="$controller neq 'index'"}class="gray"{/if} src="/static/home/mobile/picture/home.png" />
+                <span>首页</span>
+            </a>
+        </li>
+        <li>
+            <a href="/home/activity.html">
+                <img  {if condition="$controller neq 'activity'"}class="gray"{/if}  src="/static/home/mobile/picture/activity.png" />
+                <span>活动</span>
+            </a>
+        </li>
+        <li>
+            <a href="/home/task/add.html">
+                <span class="add-span"></span>
+                <span>发布</span>
+            </a>
+        </li>
+        <li>
+            <a href="/home/invite.html">
+                <img  {if condition="$controller neq 'invite'"}class="gray"{/if}  src="/static/home/mobile/picture/news.png" />
+                <span>收徒</span>
+            </a>
+        </li>
+        <li>
+            <a href="/home/account.html">
+                <img {if condition="$controller neq 'account'"}class="gray"{/if}  src="/static/home/mobile/picture/users.png" />
+                <span>我的</span>
+            </a>
+        </li>
+    </ul>
+</footer>
+	<div id="allmap"></div>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=Klw158wMoX0Ae3B6YCCEQTOzB8nQkKko"></script>
+<script type="text/javascript">
+var city='';
+	// 百度地图API功能
+	var map = new BMap.Map("allmap");
+	var point = new BMap.Point(116.331398,39.897445);
+	map.centerAndZoom(point,12);
+
+	var geolocation = new BMap.Geolocation();
+	geolocation.getCurrentPosition(function(r){
+		if(this.getStatus() == BMAP_STATUS_SUCCESS){
+			var mk = new BMap.Marker(r.point);
+			map.addOverlay(mk);
+			map.panTo(r.point);
+			//alert('您的位置：'+r.point.lng+','+r.point.lat);
+			
+			 var self = this,
+        location_name = "";
+		//获取定位名称
+		var new_point = new BMap.Point(r.point.lng,r.point.lat);
+		var gc = new BMap.Geocoder();  //初始化，Geocoder类
+		gc.getLocation(new_point, function (rs) {   //getLocation函数用来解析地址信息，分别返回省市区街等
+			var addComp = rs.addressComponents,
+				province = addComp.province,//获取省份
+				city = addComp.city,//获取城市
+				district = addComp.district,//区
+				street = addComp.street,//街
+				streetNumber = addComp.streetNumber ? addComp.streetNumber + "号" : "";
+			location_name = province + city;
+    
+			$(".city").html(city);
+		}); 
+			
+		}
+		else {
+			alert('failed'+this.getStatus());
+		}        
+	},{enableHighAccuracy: true})
+</script>
